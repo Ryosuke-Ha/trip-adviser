@@ -1,3 +1,1 @@
 # trip-adviser
-
-- test
