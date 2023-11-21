@@ -19,8 +19,38 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import Footer from "../../shared/footer/Footer";
+import { Field, reduxForm } from "redux-form";
 
-function Home() {
+interface RegionRadioButtonProps {
+  input: {
+    name: string;
+    value: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  };
+}
+
+const Region_RadioButton: React.FC<RegionRadioButtonProps> = ({
+  input,
+  ...rest
+}) => (
+  <FormControl style={{ width: 250 }}>
+    <FormLabel id="demo-row-radio-buttons-group-label">地域</FormLabel>
+    <RadioGroup
+      {...input}
+      {...rest}
+      row
+      aria-labelledby="demo-row-radio-buttons-group-label"
+      name="row-radio-buttons-group"
+    >
+      <FormControlLabel value="0" control={<Radio />} label="国内" />
+      <FormControlLabel value="1" control={<Radio />} label="海外" />
+    </RadioGroup>
+  </FormControl>
+);
+
+const HomeFelid = (props: { handleSubmit: any }) => {
+  const { handleSubmit } = props;
+
   const dateBefore = new Date();
   const now = new Date();
   const dateAfter = now.setDate(now.getDate() + 1);
@@ -29,8 +59,13 @@ function Home() {
   const styles = {
     displayCenter: { display: "flex", justifyContent: "center", margin: 20 },
   };
+
+  const onSubmit = (values: any) => {
+    console.log("Form submitted with values:", values);
+  };
+
   return (
-    <div>
+    <>
       <Header />
       <Box
         sx={{
@@ -46,98 +81,83 @@ function Home() {
         }}
       >
         <Paper elevation={12}>
-          <div style={{ paddingTop: 40 }}>
-            <div>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer
-                  components={["DateTimePicker", "DateTimePicker"]}
-                >
-                  <div style={styles.displayCenter}>
-                    <div style={{ width: 250 }}>
-                      <DateTimePicker
-                        label="行き"
-                        defaultValue={dayjs(dateBefore)}
-                        views={["year", "month", "day"]}
-                      />
-                    </div>
-                    <div style={{ marginLeft: 10, width: 250 }}>
-                      <DateTimePicker
-                        label="帰り"
-                        value={value}
-                        onChange={(newValue) => setValue(newValue)}
-                        views={["year", "month", "day"]}
-                      />
-                    </div>
-                  </div>
-                </DemoContainer>
-              </LocalizationProvider>
-            </div>
-
-            <div style={styles.displayCenter}>
-              <TextField
-                label="予算"
-                id="outlined-start-adornment"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">万円</InputAdornment>
-                  ),
-                }}
-                style={{ width: 250 }}
-              />
-              <TextField
-                required
-                // error={}
-                id="outlined-required"
-                label="人数"
-                defaultValue="0"
-                style={{ marginLeft: 10, width: 250 }}
-              />
-            </div>
-            <div style={styles.displayCenter}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div style={{ paddingTop: 40 }}>
               <div>
-                <FormControl style={{ width: 250 }}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">
-                    地域
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    defaultValue="0"
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
                   >
-                    <FormControlLabel
-                      value="0"
-                      control={<Radio />}
-                      label="国内"
-                    />
-                    <FormControlLabel
-                      value="1"
-                      control={<Radio />}
-                      label="海外"
-                    />
-                  </RadioGroup>
-                </FormControl>
+                    <div style={styles.displayCenter}>
+                      <div style={{ width: 250 }}>
+                        <DateTimePicker
+                          label="行き"
+                          defaultValue={dayjs(dateBefore)}
+                          views={["year", "month", "day"]}
+                        />
+                      </div>
+                      <div style={{ marginLeft: 10, width: 250 }}>
+                        <DateTimePicker
+                          label="帰り"
+                          value={value}
+                          onChange={(newValue) => setValue(newValue)}
+                          views={["year", "month", "day"]}
+                        />
+                      </div>
+                    </div>
+                  </DemoContainer>
+                </LocalizationProvider>
               </div>
 
-              <div style={{ width: 250 }}>
-                <Button
-                  variant="contained"
-                  style={{ marginLeft: 10, width: "100%", height: "70%" }}
-                >
-                  検索
-                </Button>
+              <div style={styles.displayCenter}>
+                <TextField
+                  label="予算"
+                  id="outlined-start-adornment"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">万円</InputAdornment>
+                    ),
+                  }}
+                  style={{ width: 250 }}
+                />
+                <TextField
+                  required
+                  // error={}
+                  id="outlined-required"
+                  label="人数"
+                  defaultValue="0"
+                  style={{ marginLeft: 10, width: 250 }}
+                />
+              </div>
+
+              <div style={styles.displayCenter}>
+                <div>
+                  <Field
+                    name="region"
+                    component={Region_RadioButton}
+                    // validate={"aa"}
+                  />
+                </div>
+
+                <div style={{ width: 250 }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    style={{ marginLeft: 10, width: "100%", height: "70%" }}
+                  >
+                    検索
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </Paper>
       </Box>
       <Footer />
-    </div>
+    </>
   );
-}
+};
 
-function isNumber(value: any): value is number {
-  return typeof value === "number";
-}
-
-export default Home;
+export default reduxForm({
+  form: "homeFelid",
+})(HomeFelid);
