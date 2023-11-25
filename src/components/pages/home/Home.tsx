@@ -5,22 +5,36 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import Footer from "../../shared/footer/Footer";
-import { Field, WrappedFieldProps, reduxForm } from "redux-form";
+import {
+  Field,
+  InjectedFormProps,
+  WrappedFieldProps,
+  reduxForm,
+} from "redux-form";
 import Region_RadioButton from "../../shared/search-form/RegionRadioButton";
 import validate from "../../shared/search-form/validator";
 import People_Text from "../../shared/search-form/PeopleText";
 import Budget_Text from "../../shared/search-form/BudgetText";
 import DatePickers from "../../shared/search-form/DatePicker";
+import { connect } from "react-redux";
+import { fetchDataFromApi } from "../../../store/action";
+import { TripSearchForm } from "../../../models/TripSearchForm";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "../../../store/reducers";
 
-const HomeFelid = (props: { handleSubmit: any }) => {
-  const { handleSubmit } = props;
+interface HomeFieldProps {
+  fetchDataFromApi: () => void;
+}
 
+const HomeFelid: React.FC<
+  HomeFieldProps & InjectedFormProps<FormData, HomeFieldProps>
+> = ({ handleSubmit, fetchDataFromApi }) => {
   const styles = {
     displayCenter: { display: "flex", justifyContent: "center", margin: 20 },
   };
 
   const onSubmit = (values: any) => {
-    console.log("Form submitted with values:", values);
+    fetchDataFromApi();
   };
 
   return (
@@ -87,7 +101,16 @@ const HomeFelid = (props: { handleSubmit: any }) => {
   );
 };
 
-export default reduxForm({
-  form: "homeFelid",
-  validate,
-})(HomeFelid);
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, void, any>) => ({
+  fetchDataFromApi: () => dispatch(fetchDataFromApi()),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(
+  reduxForm<TripSearchForm, HomeFieldProps>({
+    form: "homeField",
+    validate,
+  })(HomeFelid)
+);

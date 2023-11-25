@@ -1,23 +1,11 @@
 import dayjs from "dayjs";
+import { TripSearchForm } from "../../../models/TripSearchForm";
+import { FormErrors } from "redux-form";
 
-interface TripSearchForm {
-  departureDate?: Date;
-  returnDate?: Date;
-  region?: string;
-  people?: number;
-  budget?: number;
-}
-
-interface TripSearchErrorMsg {
-  departureDate?: string;
-  returnDate?: string;
-  region?: string;
-  people?: string;
-  budget?: string;
-}
-
-const validate = (values: TripSearchForm): Partial<TripSearchErrorMsg> => {
-  const errors: Partial<TripSearchErrorMsg> = {};
+const validate = (
+  values: TripSearchForm
+): FormErrors<TripSearchForm, string> => {
+  const errors: FormErrors<TripSearchForm, string> = {};
 
   if (!values.departureDate) {
     errors.departureDate = "入力してください";
