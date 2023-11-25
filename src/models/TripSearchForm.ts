@@ -5,3 +5,8 @@ export interface TripSearchForm extends FormData {
   people?: number;
   budget?: number;
 }
+
+export interface TripSearchResult {
+  title: string;
+  price: number;
+}

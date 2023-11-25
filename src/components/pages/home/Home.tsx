@@ -1,10 +1,7 @@
 import React from "react";
-import Header from "../../shared/header/Header";
-
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
-import Footer from "../../shared/footer/Footer";
 import {
   Field,
   InjectedFormProps,
@@ -21,9 +18,10 @@ import { fetchDataFromApi } from "../../../store/action";
 import { TripSearchForm } from "../../../models/TripSearchForm";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../../store/reducers";
+import { useNavigate } from "react-router-dom";
 
 interface HomeFieldProps {
-  fetchDataFromApi: () => void;
+  fetchDataFromApi: () => Promise<void>;
 }
 
 const HomeFelid: React.FC<
@@ -33,13 +31,15 @@ const HomeFelid: React.FC<
     displayCenter: { display: "flex", justifyContent: "center", margin: 20 },
   };
 
-  const onSubmit = (values: any) => {
-    fetchDataFromApi();
+  const navigate = useNavigate();
+
+  const onSubmit = async (values: any) => {
+    await fetchDataFromApi();
+    navigate("/result");
   };
 
   return (
     <>
-      <Header />
       <Box
         sx={{
           display: "flex",
@@ -96,7 +96,6 @@ const HomeFelid: React.FC<
           </form>
         </Paper>
       </Box>
-      <Footer />
     </>
   );
 };
