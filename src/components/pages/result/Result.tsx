@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
+import { TripSearchResult } from "../../../models/TripSearchForm";
 
 const ResultFelid = () => {
   const results = useSelector(
@@ -7,8 +8,17 @@ const ResultFelid = () => {
   );
   return (
     <>
-      <p>{results.title}</p>
-      <p>{results.price}</p>
+      {results.map((result: TripSearchResult, index: number) => {
+        return (
+          <div key={index}>
+            <h2>{result.place}</h2>
+            <p>Reasons to visit: {result.reasons.join(", ")}</p>
+            <p>Recommends: {result.recommends.join(", ")}</p>
+            <p>Prices: {result.prices.join(", ")}</p>
+            <p>Cautions: {result.cautions.join(", ")}</p>
+          </div>
+        );
+      })}
     </>
   );
 };

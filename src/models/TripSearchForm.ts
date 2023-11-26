@@ -7,6 +7,9 @@ export interface TripSearchForm extends FormData {
 }
 
 export interface TripSearchResult {
-  title: string;
-  price: number;
+  place: string;
+  reasons: string[];
+  recommends: string[];
+  prices: string[];
+  cautions: string[];
 }
