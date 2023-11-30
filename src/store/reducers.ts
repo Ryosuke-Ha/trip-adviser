@@ -2,7 +2,7 @@ import { AnyAction, combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 
 const initialState = {
-  searchResult: null,
+  searchResult: [],
 };
 
 const formDataReducer = (state = initialState, action: AnyAction) => {
@@ -11,6 +11,11 @@ const formDataReducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         searchResult: action.payload,
+      };
+    case "ADD_NEW_RESULTS":
+      return {
+        ...state,
+        searchResult: [...state.searchResult, ...action.payload],
       };
     default:
       return state;
